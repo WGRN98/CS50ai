@@ -92,7 +92,12 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
+    #TODO
+    #Get id of both persons
+    source_id = person_id_for_name(source)
+    target_id = person_id_for_name(target)
+
+    first_neighbours = neighbors_for_person(source_id)
     raise NotImplementedError
 
 
