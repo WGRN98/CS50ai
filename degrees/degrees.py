@@ -91,14 +91,57 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
+    # Sees if source is the same as the target and returns no length
+    if source == target:
+        return []
 
-    #TODO
-    #Get id of both persons
-    source_id = person_id_for_name(source)
-    target_id = person_id_for_name(target)
+    # Number of nodes explored
+    nodes_explored = 0
 
-    first_neighbours = neighbors_for_person(source_id)
-    raise NotImplementedError
+    # Identifying start point
+    start = Node(state=source, parent=None, action=None)
+
+    # Queue will work better here as we want the shortest path. BFS is better than DFS at finding the shortest path
+    frontier = QueueFrontier()
+    frontier.add(start)
+
+    # Explored actors, actors will be refered to as nodes also
+    explored = set()
+
+    while True:
+
+        # If the frontier is empty there is no path
+        if frontier.empty():
+            return None
+
+        # Node to explore nad increasing number of explored nodes
+        node = frontier.remove()
+        nodes_explored += 1
+
+        # Mark node as explored
+        explored.add(node.state)
+
+        # Defining neighbours for node
+        neighbours = neighbors_for_person(node.state)
+
+        for movie, actor in neighbours:  # If actor is not yet explored and not in the frontier explore the actor, for each acotr movie pair
+            if actor not in explored and not frontier.contains_state(actor):
+                child = Node(state=actor, parent=node, action=movie)
+
+
+                # If target is reached return list of (movie_id, actor_id)
+                if child.state == target:
+                    path = []
+                    node = child
+                    while node.parent is not None:  # If there there are still parent nodes add them to the path
+                        path.append((node.action, node.state))
+                        node = node.parent
+
+                    path.reverse()
+                    return path
+
+                # Add new node to frontier
+                frontier.add(child)
 
 
 def person_id_for_name(name):
